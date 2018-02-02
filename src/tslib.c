@@ -203,8 +203,13 @@ static void ReadInputMT(InputInfoPtr local)
 
 static void ReadInput(InputInfoPtr local)
 {
+	struct ts_priv *priv = (struct ts_priv *) (local->private);
+
 #ifdef TSLIB_VERSION_MT
-	ReadInputMT(local);
+	if (priv->abs_x_only)
+		ReadInputLegacy(local);
+	else
+		ReadInputMT(local);
 #else
 	ReadInputLegacy(local);
 #endif
